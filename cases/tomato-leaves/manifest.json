@@ -1,7 +1,29 @@
 {
   "case_id": "tomato-leaves",
-  "version": "v1.1.0",
+  "version": "v1.2.0",
   "task": "image_classification",
+  "source": {
+    "title": "Data for: Identification of Plant Leaf Diseases Using a 9-layer Deep Convolutional Neural Network",
+    "authors": [
+      "ARUN PANDIANJ",
+      "GEETHARAMANIGOPAL"
+    ],
+    "published": "2019-04-18",
+    "repository": "Mendeley Data",
+    "version": 1,
+    "doi": "10.17632/tywbtsjrjv.1",
+    "url": "https://data.mendeley.com/datasets/tywbtsjrjv/1",
+    "original_class_count": 39,
+    "original_image_count": 61486,
+    "augmentation_methods": [
+      "image flipping",
+      "Gamma correction",
+      "noise injection",
+      "PCA color augmentation",
+      "rotation",
+      "scaling"
+    ]
+  },
   "classes": [
     "early_blight",
     "healthy",
@@ -53,5 +75,11 @@
     "bacterial_spot",
     "target_spot",
     "tomato_mosaic_virus"
-  ]
+  ],
+  "derivation": {
+    "description": "Tomato five-class subset prepared from the cited Mendeley Data source.",
+    "additional_image_transforms": false,
+    "deduplication": "Exact SHA-256 duplicates removed before stratified splitting"
+  },
+  "license_note": "Follow the terms stated on the cited Mendeley Data record and its terms of use; this repository does not grant additional rights."
 }
