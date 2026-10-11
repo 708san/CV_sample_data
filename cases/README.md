@@ -1,5 +1,6 @@
-# Dataset cases
+# 教材ケース
 
-Each case is independently downloadable.
+- [festival-icons](festival-icons/) — 文化祭の案内アイコン生成（LoRA学習用）
+- トマトの葉の画像分類 — 準備中（フォルダ・仕様は未作成）
 
-- `festival-icons`: festival pictogram LoRA training images. Release asset upload pending.
+データ形式・メタデータ仕様・利用条件は、ケースごとのREADMEで管理します。
