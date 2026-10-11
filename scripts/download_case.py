@@ -15,7 +15,7 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 REPO = "708san/CV_sample_data"
-KNOWN_CASES = {"festival-icons"}
+KNOWN_CASES = {"festival-icons", "tomato-leaves"}
 _SAFE_ID = re.compile(r"^[a-zA-Z0-9_-]+$")
 _SAFE_REF = re.compile(r"^[a-zA-Z0-9._/-]+$")
 
@@ -74,12 +74,31 @@ def download_case(case_id: str, revision: str = "main", dest: str = "sample_data
     if label_file.exists() and metadata_file.exists():
         import csv
         with label_file.open(encoding="utf-8-sig", newline="") as handle:
-            labels = {row["image"]: row["caption"] for row in csv.DictReader(handle)}
+            label_rows = list(csv.DictReader(handle))
+        if label_rows and {"image", "caption"} <= set(label_rows[0]):
+            labels = {row["image"]: {"caption": row["caption"]} for row in label_rows}
+        elif label_rows and {"image", "label", "split"} <= set(label_rows[0]):
+            labels = {
+                row["image"]: {"label": row["label"], "split": row["split"]}
+                for row in label_rows
+            }
+        else:
+            raise ValueError("labels.csv has an unsupported schema")
         metadata = [json.loads(line) for line in metadata_file.read_text(encoding="utf-8").splitlines() if line.strip()]
-        current = {item["file_name"]: item["text"] for item in metadata}
+        if labels and "caption" in next(iter(labels.values())):
+            current = {item["file_name"]: {"caption": item["text"]} for item in metadata}
+        else:
+            current = {
+                item["file_name"]: {"label": item["label"], "split": item["split"]}
+                for item in metadata
+            }
         if len(labels) != len(current) or labels != current:
             raise ValueError("labels.csv and metadata.jsonl are inconsistent")
-        files = {p.relative_to(root).as_posix() for p in (root / "images").glob("*.png")}
+        files = {
+            p.relative_to(root).as_posix()
+            for p in (root / "images").rglob("*")
+            if p.is_file()
+        }
         if set(labels) != files:
-            raise ValueError("Label entries and PNG files do not match")
+            raise ValueError("Label entries and image files do not match")
     return root

@@ -1,0 +1,67 @@
+{
+  "case_id": "tomato-leaves",
+  "version": "v1.0.0",
+  "task": "image_classification",
+  "classes": [
+    "bacterial_spot",
+    "early_blight",
+    "late_blight",
+    "leaf_mold",
+    "septoria_leaf_spot",
+    "target_spot",
+    "tomato_mosaic_virus",
+    "healthy"
+  ],
+  "class_count": 8,
+  "image_count": 11113,
+  "source_image_count": 11127,
+  "exact_duplicates_removed": 14,
+  "split": {
+    "train_ratio": 0.8,
+    "test_ratio": 0.2,
+    "strategy": "stratified, deterministic SHA-256 ordering"
+  },
+  "counts": {
+    "bacterial_spot": {
+      "test": 425,
+      "train": 1702
+    },
+    "early_blight": {
+      "test": 200,
+      "train": 800
+    },
+    "late_blight": {
+      "test": 380,
+      "train": 1521
+    },
+    "leaf_mold": {
+      "test": 190,
+      "train": 762
+    },
+    "septoria_leaf_spot": {
+      "test": 354,
+      "train": 1417
+    },
+    "target_spot": {
+      "test": 281,
+      "train": 1123
+    },
+    "tomato_mosaic_virus": {
+      "test": 75,
+      "train": 298
+    },
+    "healthy": {
+      "test": 317,
+      "train": 1268
+    }
+  },
+  "format": "imagefolder",
+  "labels": "labels.csv",
+  "metadata": "metadata.jsonl",
+  "label_source_of_truth": "labels.csv",
+  "image_extensions": [
+    "jpg",
+    "jpeg",
+    "png"
+  ]
+}

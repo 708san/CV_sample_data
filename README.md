@@ -7,7 +7,7 @@
 | ケース | 用途 | データ仕様・利用条件 |
 | --- | --- | --- |
 | [文化祭アイコン（festival-icons）](cases/festival-icons/) | LoRAを使った文化祭案内アイコンの生成 | [ケース別README](cases/festival-icons/README.md) |
-| トマトの葉の画像（予定） | 葉の画像分類を体験する教材 | データ準備後に追加 |
+| [トマトの葉（tomato-leaves）](cases/tomato-leaves/) | 葉の病気分類を体験する教材 | [ケース別README](cases/tomato-leaves/README.md) |
 
 画像形式、ラベルの構造、件数、ライセンス、学習・評価上の注意事項は**各ケースのディレクトリ内**で定義します。ケース間で同じデータ形式である必要はありません。
 
