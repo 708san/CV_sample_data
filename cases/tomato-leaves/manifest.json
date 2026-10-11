@@ -81,5 +81,25 @@
     "additional_image_transforms": false,
     "deduplication": "Exact SHA-256 duplicates removed before stratified splitting"
   },
-  "license_note": "Follow the terms stated on the cited Mendeley Data record and its terms of use; this repository does not grant additional rights."
+  "license": {
+    "status": "not_identified_on_source_record_at_review_time",
+    "name": null,
+    "url": null,
+    "reviewed_at": "2026-10-11",
+    "source_record": "https://data.mendeley.com/datasets/tywbtsjrjv/1",
+    "terms_url": "https://data.mendeley.com/terms",
+    "note": "Do not assume CC BY, CC0, non-commercial permission, or commercial permission without confirming the source record and any applicable third-party rights."
+  },
+  "attribution": {
+    "authors": [
+      "Pandianj, Arun",
+      "Geetharamanigopal"
+    ],
+    "title": "Data for: Identification of Plant Leaf Diseases Using a 9-layer Deep Convolutional Neural Network",
+    "repository": "Mendeley Data",
+    "version": 1,
+    "doi": "10.17632/tywbtsjrjv.1",
+    "derivative_notice": "This repository contains a five-class tomato subset with exact-duplicate removal and train/test splitting."
+  },
+  "license_note": "The source record did not identify a specific dataset license at review time. Confirm permission and third-party rights before use or redistribution; this repository grants no additional rights."
 }
