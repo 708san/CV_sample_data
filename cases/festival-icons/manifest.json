@@ -1,8 +1,7 @@
 {
   "case_id": "festival-icons",
-  "version": "v1.0.0",
-  "image_count": 174,
-  "categories": 58,
+  "image_count": 168,
+  "categories": 56,
   "resolution": [
     512,
     512
@@ -10,8 +9,10 @@
   "trigger_word": "universal_icon_style",
   "format": "imagefolder",
   "dataset_folder": "festival-icons",
+  "labels": "labels.csv",
   "metadata": "metadata.jsonl",
-  "license_note": "Public redistribution authorized by creators; no standardized open license selected yet.",
+  "label_source_of_truth": "labels.csv",
   "excluded_target": "stage icon; music_stage and stage_lights excluded",
-  "distribution": "unpacked directory on GitHub"
+  "distribution": "unpacked case directory on GitHub",
+  "license_note": "Public GitHub hosting authorized by creators; no standard reuse license yet."
 }
