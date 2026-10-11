@@ -1,46 +1,85 @@
-"""Download one independent case archive from GitHub Releases.
+"""Fetch one dataset case from a public GitHub repo (no Release required).
 
-Works in Google Colab with standard Python only.
-Usage:
-  from scripts.download_case import download_case
-  path = download_case("festival-icons", version="v1.0.0")
+Python 3.9+ standard library only.
+Example:
+    data_dir = download_case("festival-icons", revision="main", dest="/content/sample_data")
+For repeatable lessons, pin revision to a commit SHA or an immutable tag.
 """
-from pathlib import Path
-import hashlib
-import shutil
+import base64
+import json
+import re
+import urllib.error
+import urllib.parse
 import urllib.request
-import zipfile
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 REPO = "708san/CV_sample_data"
-CASES = {"festival-icons": {"v1.0.0": "festival-icons-v1.0.0.zip"}}
+KNOWN_CASES = {"festival-icons"}
+_SAFE_ID = re.compile(r"^[a-zA-Z0-9_-]+$")
+_SAFE_REF = re.compile(r"^[a-zA-Z0-9._/-]+$")
 
-def download_case(case_id: str, version: str = "v1.0.0", dest: str = "sample_data") -> Path:
-    """Download only one dataset. Raises clearly if release asset is unpublished."""
-    try:
-        filename = CASES[case_id][version]
-    except KeyError as error:
-        raise ValueError(f"Unknown case/version: {case_id}/{version}") from error
-    dest_path = Path(dest).resolve()
-    dest_path.mkdir(parents=True, exist_ok=True)
-    archive = dest_path / filename
-    url = f"https://github.com/{REPO}/releases/download/{version}/{filename}"
-    try:
-        urllib.request.urlretrieve(url, archive)
-    except Exception as error:
-        raise RuntimeError(
-            f"Download failed: {url}. Check whether the Release ZIP has been published."
-        ) from error
-    with zipfile.ZipFile(archive) as data:
-        names = data.namelist()
-        prefix = f"{case_id}/"
-        if not names or any(not n.startswith(prefix) for n in names):
-            raise ValueError("Archive contains unexpected paths")
-        for member in data.infolist():
-            extracted = (dest_path / member.filename).resolve()
-            if not extracted.is_relative_to(dest_path):
-                raise ValueError("Unsafe path in ZIP")
-        data.extractall(dest_path)
-    folder = dest_path / case_id
-    if not (folder / "metadata.jsonl").is_file():
-        raise ValueError("Missing metadata.jsonl")
-    return folder
+
+def _read(url: str) -> bytes:
+    request = urllib.request.Request(url, headers={"User-Agent": "CV-sample-data-Colab"})
+    with urllib.request.urlopen(request, timeout=45) as response:
+        return response.read()
+
+
+def download_case(case_id: str, revision: str = "main", dest: str = "sample_data",
+                  workers: int = 8) -> Path:
+    """Download only files under cases/<case_id>/ and validate image/metadata consistency."""
+    if case_id not in KNOWN_CASES or not _SAFE_ID.fullmatch(case_id):
+        raise ValueError(f"Unknown case: {case_id}")
+    if not _SAFE_REF.fullmatch(revision) or ".." in revision or revision.startswith("/"):
+        raise ValueError("Invalid Git revision")
+    if not 1 <= workers <= 16:
+        raise ValueError("workers must be in 1..16")
+
+    encoded_ref = urllib.parse.quote(revision, safe="")
+    url = f"https://api.github.com/repos/{REPO}/git/trees/{encoded_ref}?recursive=1"
+    tree = json.loads(_read(url))
+    if tree.get("truncated"):
+        raise RuntimeError("GitHub tree listing was truncated; cannot safely download")
+    prefix = f"cases/{case_id}/"
+    members = [item["path"] for item in tree.get("tree", [])
+               if item.get("type") == "blob" and item["path"].startswith(prefix)]
+    if not members:
+        raise FileNotFoundError(f"Case not found at revision {revision}: {case_id}")
+
+    root = Path(dest).resolve() / case_id
+    root.mkdir(parents=True, exist_ok=True)
+    raw_ref = urllib.parse.quote(revision, safe="/")
+    base_url = f"https://raw.githubusercontent.com/{REPO}/{raw_ref}/"
+
+    def fetch(path):
+        relative = Path(path[len(prefix):])
+        if any(part in ("", ".", "..") for part in relative.parts):
+            raise ValueError(f"Unsafe repository path: {path}")
+        payload = _read(base_url + "/".join(urllib.parse.quote(x, safe="") for x in path.split("/")))
+        target = (root / relative).resolve()
+        if not target.is_relative_to(root):
+            raise ValueError("File escaped destination directory")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(payload)
+        return relative.as_posix()
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = [pool.submit(fetch, path) for path in members]
+        for future in as_completed(futures):
+            future.result()
+
+    label_file = root / "labels.csv"
+    metadata_file = root / "metadata.jsonl"
+    if label_file.exists() and metadata_file.exists():
+        import csv
+        with label_file.open(encoding="utf-8-sig", newline="") as handle:
+            labels = {row["image"]: row["caption"] for row in csv.DictReader(handle)}
+        metadata = [json.loads(line) for line in metadata_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+        current = {item["file_name"]: item["text"] for item in metadata}
+        if len(labels) != len(current) or labels != current:
+            raise ValueError("labels.csv and metadata.jsonl are inconsistent")
+        files = {p.relative_to(root).as_posix() for p in (root / "images").glob("*.png")}
+        if set(labels) != files:
+            raise ValueError("Label entries and PNG files do not match")
+    return root
