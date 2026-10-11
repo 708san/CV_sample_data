@@ -1,14 +1,17 @@
 {
   "case_id": "festival-icons",
   "version": "v1.0.0",
-  "image_count": 180,
-  "categories": 60,
+  "image_count": 174,
+  "categories": 58,
   "resolution": [
     512,
     512
   ],
   "trigger_word": "universal_icon_style",
-  "archive": "festival-icons-v1.0.0.zip",
-  "license": "Public distribution permitted; standardized license not assigned",
-  "status": "release-asset-upload-pending"
+  "format": "imagefolder",
+  "dataset_folder": "festival-icons",
+  "metadata": "metadata.jsonl",
+  "license_note": "Public redistribution authorized by creators; no standardized open license selected yet.",
+  "excluded_target": "stage icon; music_stage and stage_lights excluded",
+  "distribution": "unpacked directory on GitHub"
 }
