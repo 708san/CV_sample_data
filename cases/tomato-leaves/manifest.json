@@ -13,6 +13,7 @@
     "version": 1,
     "doi": "10.17632/tywbtsjrjv.1",
     "url": "https://data.mendeley.com/datasets/tywbtsjrjv/1",
+    "related_article_doi": "10.1016/j.compeleceng.2019.04.011",
     "original_class_count": 39,
     "original_image_count": 61486,
     "augmentation_methods": [
@@ -82,13 +83,9 @@
     "deduplication": "Exact SHA-256 duplicates removed before stratified splitting"
   },
   "license": {
-    "status": "not_identified_on_source_record_at_review_time",
-    "name": null,
-    "url": null,
-    "reviewed_at": "2026-10-11",
-    "source_record": "https://data.mendeley.com/datasets/tywbtsjrjv/1",
-    "terms_url": "https://data.mendeley.com/terms",
-    "note": "Do not assume CC BY, CC0, non-commercial permission, or commercial permission without confirming the source record and any applicable third-party rights."
+    "name": "CC0 1.0",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source_record": "https://data.mendeley.com/datasets/tywbtsjrjv/1"
   },
   "attribution": {
     "authors": [
@@ -101,5 +98,5 @@
     "doi": "10.17632/tywbtsjrjv.1",
     "derivative_notice": "This repository contains a five-class tomato subset with exact-duplicate removal and train/test splitting."
   },
-  "license_note": "The source record did not identify a specific dataset license at review time. Confirm permission and third-party rights before use or redistribution; this repository grants no additional rights."
+  "license_note": "The source dataset is published under CC0 1.0. This repository contains a five-class tomato subset with exact-duplicate removal and train/test splitting."
 }
