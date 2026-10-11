@@ -1,20 +1,17 @@
 {
   "case_id": "tomato-leaves",
-  "version": "v1.0.0",
+  "version": "v1.1.0",
   "task": "image_classification",
   "classes": [
-    "bacterial_spot",
     "early_blight",
+    "healthy",
     "late_blight",
-    "leaf_mold",
     "septoria_leaf_spot",
-    "target_spot",
-    "tomato_mosaic_virus",
-    "healthy"
+    "leaf_mold"
   ],
-  "class_count": 8,
-  "image_count": 11113,
-  "source_image_count": 11127,
+  "class_count": 5,
+  "image_count": 7209,
+  "source_image_count": 7223,
   "exact_duplicates_removed": 14,
   "split": {
     "train_ratio": 0.8,
@@ -22,37 +19,25 @@
     "strategy": "stratified, deterministic SHA-256 ordering"
   },
   "counts": {
-    "bacterial_spot": {
-      "test": 425,
-      "train": 1702
-    },
     "early_blight": {
       "test": 200,
       "train": 800
+    },
+    "healthy": {
+      "test": 317,
+      "train": 1268
     },
     "late_blight": {
       "test": 380,
       "train": 1521
     },
-    "leaf_mold": {
-      "test": 190,
-      "train": 762
-    },
     "septoria_leaf_spot": {
       "test": 354,
       "train": 1417
     },
-    "target_spot": {
-      "test": 281,
-      "train": 1123
-    },
-    "tomato_mosaic_virus": {
-      "test": 75,
-      "train": 298
-    },
-    "healthy": {
-      "test": 317,
-      "train": 1268
+    "leaf_mold": {
+      "test": 190,
+      "train": 762
     }
   },
   "format": "imagefolder",
@@ -63,5 +48,10 @@
     "jpg",
     "jpeg",
     "png"
+  ],
+  "excluded_classes": [
+    "bacterial_spot",
+    "target_spot",
+    "tomato_mosaic_virus"
   ]
 }
