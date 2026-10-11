@@ -1,0 +1,14 @@
+{
+  "case_id": "festival-icons",
+  "version": "v1.0.0",
+  "image_count": 180,
+  "categories": 60,
+  "resolution": [
+    512,
+    512
+  ],
+  "trigger_word": "universal_icon_style",
+  "archive": "festival-icons-v1.0.0.zip",
+  "license": "Public distribution permitted; standardized license not assigned",
+  "status": "release-asset-upload-pending"
+}
