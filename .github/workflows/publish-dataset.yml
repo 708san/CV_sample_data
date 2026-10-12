@@ -1,0 +1,44 @@
+name: Publish verified dataset ZIP
+on:
+  push:
+    tags:
+      - "tomato-v*"
+      - "festival-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tagged data
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Choose case
+        id: select
+        shell: bash
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          case "$TAG" in
+            tomato-v*) echo "case_id=tomato-leaves" >> "$GITHUB_OUTPUT" ;;
+            festival-v*) echo "case_id=festival-icons" >> "$GITHUB_OUTPUT" ;;
+            *) exit 1 ;;
+          esac
+      - name: Validate dataset and build deterministic ZIP
+        env:
+          CASE_ID: ${{ steps.select.outputs.case_id }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          python scripts/build_releases.py --case "$CASE_ID" --tag "$TAG"
+          cd dist
+          sha256sum --check "$CASE_ID.zip.sha256"
+      - name: Publish ZIP and SHA-256 checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CASE_ID: ${{ steps.select.outputs.case_id }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG"             "dist/$CASE_ID.zip" "dist/$CASE_ID.zip.sha256"             --verify-tag --latest=false             --title "$TAG"             --notes "Validated sample data $CASE_ID; see case manifest and README for licensing and provenance."
