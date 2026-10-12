@@ -1,0 +1,28 @@
+name: Validate dataset packaging
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "cases/**"
+      - "scripts/build_releases.py"
+      - "RELEASE_GUIDE.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate both cases and create ZIP files
+        run: |
+          python scripts/build_releases.py --case tomato-leaves --tag tomato-v1.2.0
+          python scripts/build_releases.py --case festival-icons --tag festival-v1.0.0
+          cd dist
+          sha256sum -c tomato-leaves.zip.sha256
+          sha256sum -c festival-icons.zip.sha256
